@@ -32,6 +32,7 @@ namespace Corporate_app
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => 
                 {
+                    options.Cookie.MaxAge = new TimeSpan(2, 0, 0); //hh/mm/ss
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
         }

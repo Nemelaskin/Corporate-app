@@ -447,3 +447,11 @@ D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\V
 D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\Positions\Details.cshtml.g.cs
 D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\Positions\Edit.cshtml.g.cs
 D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\Positions\Index.cshtml.g.cs
+D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\ChatLists\Create.cshtml.g.cs
+D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\ChatLists\Delete.cshtml.g.cs
+D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\ChatLists\Details.cshtml.g.cs
+D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\ChatLists\Edit.cshtml.g.cs
+D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\ChatLists\Index.cshtml.g.cs
+D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\Admin\MainAdminMenu.cshtml.g.cs
+D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\bin\Debug\net5.0\BCrypt.Net-Next.dll
+D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\Shared\_AdminLayout.cshtml.g.cs

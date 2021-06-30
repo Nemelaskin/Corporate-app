@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "KK0Lid0u/vYWxi/7rqqwc9b0DYa8Vlb5ckP5JdIgkjvyb/guV3EBQd/m80EugraHn2kBOpY37EBoUmQySrccZA==",
+  "dgSpecHash": "Q6/Ct3YFA6B5FQlGWWmdkXTtLRTPzdTThSQLsBYUjPFGWhd12TJJz1/2VlahsMRcTjJSdZdZVRzDXtzkytdxFA==",
   "success": true,
   "projectFilePath": "D:\\Users\\cfcrt\\source\\repos\\Corporate-app\\Corporate-app\\Corporate-app.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\cfcrt\\.nuget\\packages\\bcrypt.net-next\\4.0.2\\bcrypt.net-next.4.0.2.nupkg.sha512",
     "C:\\Users\\cfcrt\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\cfcrt\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\cfcrt\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.extensions\\5.0.7\\microsoft.aspnetcore.mvc.razor.extensions.5.0.7.nupkg.sha512",
