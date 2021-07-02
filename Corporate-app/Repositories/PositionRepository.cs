@@ -16,7 +16,7 @@ namespace Corporate_app.Repositories
             this.context = context;
         }
 
-        public IQueryable<Position> GetPosition()
+        public IQueryable<Position> GetPositions()
         {
             return context.Positions.OrderBy(x => x.PositionId);
         }

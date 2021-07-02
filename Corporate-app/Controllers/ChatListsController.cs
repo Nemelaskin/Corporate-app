@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Corporate_app.Repositories;
 using Corporate_app.Models;
 using Corporate_app.Models.Context;
 
@@ -13,33 +14,27 @@ namespace Corporate_app.Controllers
     public class ChatListsController : Controller
     {
         private readonly ModelsContext _context;
+        private readonly ChatListRepository repository;
 
-        public ChatListsController(ModelsContext context)
-
+        public ChatListsController(ModelsContext context, ChatListRepository repository)
         {
             _context = context;
+            this.repository = repository;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ChatLists.ToListAsync());
+            var modelsContext = repository.GetChatLists();
+            return View(await modelsContext);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
+            var chats = await repository.GetChatList(id);
+            if (chats == null) {
+                return RedirectToAction("Index", "ChatLists");
             }
-
-            var chatList = await _context.ChatLists
-                .FirstOrDefaultAsync(m => m.ChatListId == id);
-            if (chatList == null)
-            {
-                return NotFound();
-            }
-
-            return View(chatList);
+            return View(chats);
         }
 
         public IActionResult Create()
@@ -51,54 +46,42 @@ namespace Corporate_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ChatListId,Name")] ChatList chatList)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(chatList);
-                await _context.SaveChangesAsync();
+            if (ModelState.IsValid) {
+                repository.SaveChatList(chatList);
                 return RedirectToAction(nameof(Index));
             }
             return View(chatList);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
+            var chats = await repository.GetChatList(id);
+            if (chats == null) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
-
-            var chatList = await _context.ChatLists.FindAsync(id);
-            if (chatList == null)
-            {
-                return NotFound();
-            }
-            return View(chatList);
+            return View(chats);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ChatListId,Name")] ChatList chatList)
         {
-            if (id != chatList.ChatListId)
-            {
-                return NotFound();
+            if (id != chatList.ChatListId) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(chatList);
-                    await _context.SaveChangesAsync();
+            if (ModelState.IsValid) {
+                try {
+                    repository.SaveChatList(chatList);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ChatListExists(chatList.ChatListId))
-                    {
-                        return NotFound();
+                catch (DbUpdateConcurrencyException) {
+                    if (!ChatListExists(chatList.ChatListId)) {
+                        ModelState.AddModelError("", "Error! Not found this id!");
+                        return View();
                     }
-                    else
-                    {
+                    else {
                         throw;
                     }
                 }
@@ -107,30 +90,23 @@ namespace Corporate_app.Controllers
             return View(chatList);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
+            var chats = await repository.GetChatList(id);
+            if (chats == null) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
 
-            var chatList = await _context.ChatLists
-                .FirstOrDefaultAsync(m => m.ChatListId == id);
-            if (chatList == null)
-            {
-                return NotFound();
-            }
-
-            return View(chatList);
+            return View(chats);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var chatList = await _context.ChatLists.FindAsync(id);
-            _context.ChatLists.Remove(chatList);
-            await _context.SaveChangesAsync();
+            var chats = await repository.GetChatList(id);
+            repository.DeleteChatList(chats);
             return RedirectToAction(nameof(Index));
         }
 

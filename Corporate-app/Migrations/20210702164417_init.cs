@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Corporate_app.Migrations
 {
-    public partial class first : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -79,6 +79,30 @@ namespace Corporate_app.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChatListUser",
+                columns: table => new
+                {
+                    ChatListId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatListUser", x => new { x.ChatListId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_ChatListUser_ChatLists_ChatListId",
+                        column: x => x.ChatListId,
+                        principalTable: "ChatLists",
+                        principalColumn: "ChatListId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ChatListUser_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MessageLists",
                 columns: table => new
                 {
@@ -106,29 +130,10 @@ namespace Corporate_app.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "User_ChatLists",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ChatListId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User_ChatLists", x => new { x.UserId, x.ChatListId });
-                    table.ForeignKey(
-                        name: "FK_User_ChatLists_ChatLists_ChatListId",
-                        column: x => x.ChatListId,
-                        principalTable: "ChatLists",
-                        principalColumn: "ChatListId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_User_ChatLists_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatListUser_UserId",
+                table: "ChatListUser",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MessageLists_ChatListId",
@@ -139,11 +144,6 @@ namespace Corporate_app.Migrations
                 name: "IX_MessageLists_UserId",
                 table: "MessageLists",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_ChatLists_ChatListId",
-                table: "User_ChatLists",
-                column: "ChatListId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_PositionId",
@@ -159,10 +159,10 @@ namespace Corporate_app.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MessageLists");
+                name: "ChatListUser");
 
             migrationBuilder.DropTable(
-                name: "User_ChatLists");
+                name: "MessageLists");
 
             migrationBuilder.DropTable(
                 name: "ChatLists");

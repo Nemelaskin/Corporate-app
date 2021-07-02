@@ -33,7 +33,7 @@ namespace Corporate_app.Controllers
                 User user = await context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
                 if (user != null) {
                     if (BCrypt.Net.BCrypt.Verify(model.Password, user.Password)){
-                        await Authenticate(model.Email);
+                        await Authenticate(user.UserId + " " + user.Name + " " + user.SurName);
                         return RedirectToAction("Index", "Home");
                     }
                     
@@ -57,8 +57,6 @@ namespace Corporate_app.Controllers
                     string passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
                     context.Users.Add(new User { Email = model.Email, Password = passwordHash, Name = model.Name, SurName = model.Surname, Phone = model.Phone, RoleId=1, PositionId= 1});
                     await context.SaveChangesAsync();
-
-                    await Authenticate(model.Email);
 
                     return RedirectToAction("Index", "Home");
                 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Corporate_app.Models;
 using Corporate_app.Models.Context;
@@ -14,9 +15,9 @@ namespace Corporate_app.Repositories
             this.context = context;
         }
 
-        public IQueryable<ChatList> GetChatLists()
+        public async Task<List<ChatList>> GetChatLists()
         {
-            return context.ChatLists.OrderBy(x => x.ChatListId);
+            return await context.ChatLists.Include(u=> u.User).OrderBy(x => x.ChatListId).ToListAsync();
         }
 
         async public Task<ChatList> GetChatList(int id)

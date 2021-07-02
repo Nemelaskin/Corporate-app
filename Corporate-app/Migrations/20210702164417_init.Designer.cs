@@ -10,16 +10,31 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Corporate_app.Migrations
 {
     [DbContext(typeof(ModelsContext))]
-    [Migration("20210627154401_first")]
-    partial class first
+    [Migration("20210702164417_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.7")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("ChatListUser", b =>
+                {
+                    b.Property<int>("ChatListId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ChatListId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatListUser");
+                });
 
             modelBuilder.Entity("Corporate_app.Models.ChatList", b =>
                 {
@@ -134,19 +149,19 @@ namespace Corporate_app.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Corporate_app.Models.User_ChatList", b =>
+            modelBuilder.Entity("ChatListUser", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.HasOne("Corporate_app.Models.ChatList", null)
+                        .WithMany()
+                        .HasForeignKey("ChatListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("ChatListId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "ChatListId");
-
-                    b.HasIndex("ChatListId");
-
-                    b.ToTable("User_ChatLists");
+                    b.HasOne("Corporate_app.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Corporate_app.Models.MessageList", b =>
@@ -185,25 +200,6 @@ namespace Corporate_app.Migrations
                     b.Navigation("Position");
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Corporate_app.Models.User_ChatList", b =>
-                {
-                    b.HasOne("Corporate_app.Models.ChatList", "ChatList")
-                        .WithMany()
-                        .HasForeignKey("ChatListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Corporate_app.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ChatList");
-
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

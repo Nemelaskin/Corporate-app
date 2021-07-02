@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Corporate_app.Models;
+using Corporate_app.Repositories;
 using Corporate_app.Models.Context;
 
 namespace Corporate_app.Controllers
@@ -13,31 +14,27 @@ namespace Corporate_app.Controllers
     public class PositionsController : Controller
     {
         private readonly ModelsContext _context;
+        private readonly PositionRepository repository;
 
-        public PositionsController(ModelsContext context)
+        public PositionsController(ModelsContext context, PositionRepository repository)
         {
             _context = context;
+            this.repository = repository;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Positions.ToListAsync());
+            var modelsContext = repository.GetPositions();
+            return View(await modelsContext.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var position = await repository.GetPosition(id);
+            if (position == null) {
 
-            var position = await _context.Positions
-                .FirstOrDefaultAsync(m => m.PositionId == id);
-            if (position == null)
-            {
-                return NotFound();
+                return RedirectToAction("Index", "Positions");
             }
-
             return View(position);
         }
 
@@ -52,26 +49,19 @@ namespace Corporate_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PositionId,PositionName")] Position position)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(position);
-                await _context.SaveChangesAsync();
+            if (ModelState.IsValid) {
+                repository.SavePosition(position);
                 return RedirectToAction(nameof(Index));
             }
             return View(position);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var position = await _context.Positions.FindAsync(id);
-            if (position == null)
-            {
-                return NotFound();
+            var position = await repository.GetPosition(id);
+            if (position == null) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
             return View(position);
         }
@@ -80,26 +70,21 @@ namespace Corporate_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PositionId,PositionName")] Position position)
         {
-            if (id != position.PositionId)
-            {
-                return NotFound();
+            if (id != position.PositionId) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(position);
-                    await _context.SaveChangesAsync();
+            if (ModelState.IsValid) {
+                try {
+                    repository.SavePosition(position);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PositionExists(position.PositionId))
-                    {
-                        return NotFound();
+                catch (DbUpdateConcurrencyException) {
+                    if (!PositionExists(position.PositionId)) {
+                        ModelState.AddModelError("", "Error! Not found this id!");
+                        return View();
                     }
-                    else
-                    {
+                    else {
                         throw;
                     }
                 }
@@ -108,18 +93,12 @@ namespace Corporate_app.Controllers
             return View(position);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var position = await _context.Positions
-                .FirstOrDefaultAsync(m => m.PositionId == id);
-            if (position == null)
-            {
-                return NotFound();
+            var position = await repository.GetPosition(id);
+            if (position == null) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
 
             return View(position);
@@ -129,9 +108,8 @@ namespace Corporate_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var position = await _context.Positions.FindAsync(id);
-            _context.Positions.Remove(position);
-            await _context.SaveChangesAsync();
+            var position = await repository.GetPosition(id);
+            repository.DeletePosition(position);
             return RedirectToAction(nameof(Index));
         }
 

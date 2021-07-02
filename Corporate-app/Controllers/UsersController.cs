@@ -16,9 +16,10 @@ namespace Corporate_app.Controllers
     {
         private readonly ModelsContext _context;
         private readonly UsersRepository repository;
-        public UsersController(ModelsContext context)
+        public UsersController(ModelsContext context, UsersRepository repository)
         {
             _context = context;
+            this.repository = repository;
         }
 
         public async Task<IActionResult> Index()
@@ -57,14 +58,10 @@ namespace Corporate_app.Controllers
             return View(user);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null) {
-                ModelState.AddModelError("", "Error! Not found this id!");
-                return View();
-            }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await repository.GetUser(id);
             if (user == null) {
                 ModelState.AddModelError("", "Error! Not found this id!");
                 return View();
@@ -107,7 +104,8 @@ namespace Corporate_app.Controllers
         {
             var user = await repository.GetUser(id);
             if (user == null) {
-                return NotFound();
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
 
             return View(user);

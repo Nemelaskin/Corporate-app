@@ -19,7 +19,7 @@ namespace Corporate_app.Models
         public int RoleId { get; set; }
         public Role Role { get; set; }
         public string Phone { get; set; }
-        public List<ChatList> ChatList = new List<ChatList>();
+        public List<ChatList> ChatList { get; set; }
         public string ConfirmationCode { get; set; }
     }
 }

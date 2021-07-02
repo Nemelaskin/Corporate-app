@@ -11,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Corporate_app.Repositories;
+using Corporate_app.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Corporate_app
 {
@@ -28,6 +31,13 @@ namespace Corporate_app
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ModelsContext>(options => options.UseSqlServer(connection));
             services.AddMvc();
+            services.AddSignalR();
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+            
+            services.AddTransient<UsersRepository>();
+            services.AddTransient<PositionRepository>();
+            services.AddTransient<RoleRepository>();
+            services.AddTransient<ChatListRepository>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => 
@@ -54,9 +64,10 @@ namespace Corporate_app
 
             app.UseAuthentication();    
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<MessageHub>("/chats");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

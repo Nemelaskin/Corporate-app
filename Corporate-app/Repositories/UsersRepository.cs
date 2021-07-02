@@ -18,7 +18,7 @@ namespace Corporate_app.Repositories
 
         public IQueryable<User> GetUsers()
         {
-            return context.Users.OrderBy(x => x.UserId);
+            return context.Users.Include(u => u.Position).Include(u => u.Role).OrderBy(x => x.UserId);
         }
 
         async public Task<User> GetUser(int id)
