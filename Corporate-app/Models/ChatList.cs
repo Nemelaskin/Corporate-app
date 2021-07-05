@@ -11,7 +11,6 @@ namespace Corporate_app.Models
         [Key]
         public int ChatListId { get; set; }
         public string Name{ get; set; }
-        //public int UserId { get; set; }
         public List<User> User { get; set; }
 
     }

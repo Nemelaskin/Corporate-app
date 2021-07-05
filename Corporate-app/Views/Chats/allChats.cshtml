@@ -1,21 +1,46 @@
 ﻿@{
-    Layout = null;
+    Layout = "~/Views/Shared/_ChatsLayout.cshtml";
 }
 
 @inject Corporate_app.Models.Context.ModelsContext context
 
-<h1>testing message</h1>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>SignalR Chat - Metanit.com</title>
+    <title>SignalR Chat</title>
+    <link rel="stylesheet" asp-append-version="true" href="~/css/ModalWindow.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 </head>
 <body>
-    <h1>Chat List!</h1>
-    <button id="createChatBtn">Create new chat</button>
+    <button class="btn btn-primary" id="myBtn">Create new chat</button>
+    <div class="row">
+        <div class="col-5 listConstr">
+            
+            @foreach (var item in ViewBag.List)
+            {
+                <button onclick="viewChat(@item.Name)" class="list-group-item list-group-item-action">@item.Name</button>
+                <button onclick="viewChat(@item.Name)" class="list-group-item list-group-item-action">@item.Name</button>
+                <button onclick="viewChat(@item.Name)" class="list-group-item list-group-item-action">@item.Name</button>
+                <button onclick="viewChat(@item.Name)" class="list-group-item list-group-item-action">@item.Name</button>
+                <button onclick="viewChat(@item.Name)" class="list-group-item list-group-item-action">@item.Name</button>
+                <button onclick="viewChat(@item.Name)" class="list-group-item list-group-item-action">@item.Name</button>
+                <button onclick="viewChat(@item.Name)" class="list-group-item list-group-item-action">@item.Name</button>
+            }
+        </div>
 
-    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
-    <script src="~/js/connectionToSignalR.js"></script>
+        <div class="col-7">
+
+            <div id="myModal" class="modal">
+
+                <div class="modal-content" id="container">
+                    <span class="close">&times;</span>
+                    <p>Some text in the Modal..</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="~/js/modalWIn.js"></script>
 </body>
 </html>

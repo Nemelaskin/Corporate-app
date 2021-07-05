@@ -26,8 +26,9 @@ namespace Corporate_app.Controllers
             var userId = Convert.ToInt32(User.Identity.Name.Split(" ")[0]);
             //var usr = await repositoryUser.GetUser(userId);
             //List<ChatList> chatLists = new List<ChatList>();
-            var chatLists = repositoryChat.GetChatLists();
-            //var d = chatLists.FirstOrDefault(u => u.User.FirstOrDefault(y => y.UserId == userId) != null);
+            var chatLists = await repositoryChat.GetChatLists();
+            var listUsersChats = chatLists.FindAll(u => u.User.FirstOrDefault(y => y.UserId == userId) != null);
+            ViewBag.List = listUsersChats;
             return View();
         }
         public IActionResult TestingChat()

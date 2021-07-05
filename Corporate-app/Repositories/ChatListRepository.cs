@@ -22,7 +22,7 @@ namespace Corporate_app.Repositories
 
         async public Task<ChatList> GetChatList(int id)
         {
-            return await context.ChatLists.FirstOrDefaultAsync(u => u.ChatListId == id);
+            return await context.ChatLists.Include(u => u.User).FirstOrDefaultAsync(u => u.ChatListId == id);
         }
 
         async public void SaveChatList(ChatList entity)
