@@ -1,0 +1,26 @@
+﻿#chatScroll {
+    border: ridge;
+    border-color: #708090;
+    height: 65vh;
+    overflow-y: auto;
+}
+
+
+#inputForm {
+    position: relative;
+    margin-top: 10px;
+    margin-left: 40px;
+    margin-right: auto;
+}
+#message {
+    height: 2em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    
+}
+#sendBtn {
+    margin-top: -5px;
+    height: 2em;
+    width: 25%;
+}

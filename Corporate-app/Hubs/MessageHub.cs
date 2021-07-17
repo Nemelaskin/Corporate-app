@@ -35,9 +35,8 @@ namespace Corporate_app.Hubs
         public async Task SendMessageForGroup(string message, string chatName)
         {
             var user = Context.User;
-            var userName = user.Identity.Name;
-            string textMessage = userName + " said: " + message;
-            //repositoryMessage.SaveMessage(chat, userName.Split(' ')[0], textMessage);
+            var userName = user.Identity.Name.Split(" ");
+            string textMessage = userName[1] + " " + userName[2] + ": " + message;
             await Clients.Groups(chatName).SendAsync("SendMessageForGroupTest", textMessage);
         }
         public string test()

@@ -39,6 +39,8 @@ namespace Corporate_app.Controllers
         {
             await ChatsBody();
             ViewBag.Chat = actualChat;
+            var user = User.Identity.Name.Split(" ");
+            ViewBag.User = user[1] + " " + user[2]; 
             return View();
         }
 

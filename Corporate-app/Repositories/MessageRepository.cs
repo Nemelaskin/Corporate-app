@@ -41,6 +41,7 @@ namespace Corporate_app.Repositories
             MessageList messageList = new MessageList();
             var chat = context.ChatLists.FirstOrDefault(u => u.Name == nameChat);
             var user = context.Users.FirstOrDefault(u => u.UserId == Convert.ToInt32(userId));
+
             messageList.ChatList = chat;
             messageList.User = user;
             messageList.Сontent = content;
