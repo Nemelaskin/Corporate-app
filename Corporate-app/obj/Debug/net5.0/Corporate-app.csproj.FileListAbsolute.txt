@@ -458,3 +458,4 @@ D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\V
 D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\Chats\allChats.cshtml.g.cs
 D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\Chats\TestingChat.cshtml.g.cs
 D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\Shared\_ChatsLayout.cshtml.g.cs
+D:\Users\cfcrt\source\repos\Corporate-app\Corporate-app\obj\Debug\net5.0\Razor\Views\Chats\Chat.cshtml.g.cs

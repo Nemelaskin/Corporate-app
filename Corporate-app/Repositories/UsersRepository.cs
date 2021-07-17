@@ -31,14 +31,14 @@ namespace Corporate_app.Repositories
             if (entity.UserId == default)
                 await context.Users.AddAsync(entity);
             else
-                 context.Users.Update(entity);
-            await context.SaveChangesAsync();
+                context.Users.Update(entity);
+            context.SaveChanges();
         }
 
-        async public void DeleteUser(User entity)
+        public void DeleteUser(User entity)
         {
             context.Users.Remove(entity);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
     }
 }

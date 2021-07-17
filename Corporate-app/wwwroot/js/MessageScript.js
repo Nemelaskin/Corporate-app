@@ -1,4 +1,6 @@
-﻿hubConnection.on("SendMessageForOneTest", function (data) {
+﻿const dataName = document.getElementById("dataName").innerHTML;
+
+hubConnection.on("SendMessageForGroupTest", function (data) {
 
     let elem = document.createElement("p");
     elem.appendChild(document.createTextNode(data));
@@ -9,7 +11,8 @@
 
 document.getElementById("sendBtn").addEventListener("click", function (e) {
     let message = document.getElementById("message").value;
-    hubConnection.invoke("SendMessageForOne", message);
+    hubConnection.invoke("SendMessageForGroup", message, dataName);
+    document.getElementById("message").value = "";
 });
 
 hubConnection.start();

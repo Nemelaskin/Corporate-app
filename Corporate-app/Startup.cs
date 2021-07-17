@@ -33,11 +33,14 @@ namespace Corporate_app
             services.AddMvc();
             services.AddSignalR();
             services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
-            
+            services.AddHttpContextAccessor();
+
+
             services.AddTransient<UsersRepository>();
             services.AddTransient<PositionRepository>();
             services.AddTransient<RoleRepository>();
             services.AddTransient<ChatListRepository>();
+            services.AddTransient<MessageRepository>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => 

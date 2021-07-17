@@ -44,7 +44,7 @@ namespace Corporate_app.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ChatListId,Name")] ChatList chatList)
+        public  IActionResult Create([Bind("ChatListId,Name")] ChatList chatList)
         {
             if (ModelState.IsValid) {
                 repository.SaveChatList(chatList);

@@ -32,13 +32,13 @@ namespace Corporate_app.Repositories
                 await context.Roles.AddAsync(entity);
             else
                 context.Roles.Update(entity);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
 
-        async public void DeleteRole(Role entity)
+        public void DeleteRole(Role entity)
         {
             context.Roles.Remove(entity);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
     }
 }

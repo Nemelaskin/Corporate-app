@@ -32,13 +32,13 @@ namespace Corporate_app.Repositories
                 await context.Positions.AddAsync(entity);
             else
                 context.Positions.Update(entity);
-            await context.SaveChangesAsync();
+             context.SaveChanges();
         }
 
-        async public void DeletePosition(Position entity)
+        public void DeletePosition(Position entity)
         {
             context.Positions.Remove(entity);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
     }
 }

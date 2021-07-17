@@ -17,7 +17,7 @@ namespace Corporate_app.Repositories
 
         public async Task<List<ChatList>> GetChatLists()
         {
-            return await context.ChatLists.Include(u=> u.User).OrderBy(x => x.ChatListId).ToListAsync();
+            return await context.ChatLists.Include(u => u.User).OrderBy(x => x.ChatListId).ToListAsync();
         }
 
         async public Task<ChatList> GetChatList(int id)
@@ -31,13 +31,13 @@ namespace Corporate_app.Repositories
                 await context.ChatLists.AddAsync(entity);
             else
                 context.ChatLists.Update(entity);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
 
-        async public void DeleteChatList(ChatList entity)
+        public void DeleteChatList(ChatList entity)
         {
             context.ChatLists.Remove(entity);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
     }
 }
