@@ -1,0 +1,18 @@
+﻿.block_row {
+    display: flex;
+    text-align: center;
+}
+
+.block_column3 {
+    padding: 10px;
+    flex: 0 0 30%;
+}
+
+.Block1 {
+    padding: 10px;
+    flex: 1 1 auto;
+}
+
+.btn-block + .btn-block {
+    margin-top: 3px;
+}

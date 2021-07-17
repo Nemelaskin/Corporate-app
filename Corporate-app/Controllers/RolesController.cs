@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Corporate_app.Repositories;
 using Corporate_app.Models;
 using Corporate_app.Models.Context;
 
@@ -12,32 +13,28 @@ namespace Corporate_app.Controllers
 {
     public class RolesController : Controller
     {
-        private readonly ModelsContext _context;
+        private readonly ModelsContext context;
+        private readonly RoleRepository repository;
 
-        public RolesController(ModelsContext context)
+        public RolesController(ModelsContext context, RoleRepository repository)
         {
-            _context = context;
+            this.context = context;
+            this.repository = repository;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Roles.ToListAsync());
+            var modelsContext = repository.GetRoles();
+            return View(await modelsContext.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var role = await repository.GetRole(id);
+            if (role == null) {
 
-            var role = await _context.Roles
-                .FirstOrDefaultAsync(m => m.RoleId == id);
-            if (role == null)
-            {
-                return NotFound();
+                return RedirectToAction("Index", "Roles");
             }
-
             return View(role);
         }
 
@@ -48,56 +45,44 @@ namespace Corporate_app.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RoleId,RoleName")] Role role)
+        public IActionResult Create([Bind("RoleId,RoleName")] Role role)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(role);
-                await _context.SaveChangesAsync();
+            if (ModelState.IsValid) {
+                repository.SaveRole(role);
                 return RedirectToAction(nameof(Index));
             }
             return View(role);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var role = await _context.Roles.FindAsync(id);
-            if (role == null)
-            {
-                return NotFound();
+            var role = await repository.GetRole(id);
+            if (role == null) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
             return View(role);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RoleId,RoleName")] Role role)
+        public IActionResult Edit(int id, [Bind("RoleId,RoleName")] Role role)
         {
-            if (id != role.RoleId)
-            {
-                return NotFound();
+            if (id != role.RoleId) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(role);
-                    await _context.SaveChangesAsync();
+            if (ModelState.IsValid) {
+                try {
+                    repository.SaveRole(role);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RoleExists(role.RoleId))
-                    {
-                        return NotFound();
+                catch (DbUpdateConcurrencyException) {
+                    if (!RoleExists(role.RoleId)) {
+                        ModelState.AddModelError("", "Error! Not found this id!");
+                        return View();
                     }
-                    else
-                    {
+                    else {
                         throw;
                     }
                 }
@@ -106,19 +91,12 @@ namespace Corporate_app.Controllers
             return View(role);
         }
 
-        // GET: Roles/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var role = await _context.Roles
-                .FirstOrDefaultAsync(m => m.RoleId == id);
-            if (role == null)
-            {
-                return NotFound();
+            var role = await repository.GetRole(id);
+            if (role == null) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
 
             return View(role);
@@ -128,15 +106,14 @@ namespace Corporate_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var role = await _context.Roles.FindAsync(id);
-            _context.Roles.Remove(role);
-            await _context.SaveChangesAsync();
+            var role = await repository.GetRole(id);
+            repository.DeleteRole(role);
             return RedirectToAction(nameof(Index));
         }
 
         private bool RoleExists(int id)
         {
-            return _context.Roles.Any(e => e.RoleId == id);
+            return context.Roles.Any(e => e.RoleId == id);
         }
     }
 }

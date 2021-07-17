@@ -1,7 +1,7 @@
 ﻿@model Corporate_app.Models.Role
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit"; Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <h1>Edit</h1>
@@ -11,7 +11,7 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="m-2 p-2 bg-danger text-white rounded" asp-validation-summary="ModelOnly"></div>
             <input type="hidden" asp-for="RoleId" />
             <div class="form-group">
                 <label asp-for="RoleName" class="control-label"></label>

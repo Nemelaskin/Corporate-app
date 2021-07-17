@@ -7,40 +7,34 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Corporate_app.Models;
 using Corporate_app.Models.Context;
+using Corporate_app.Repositories;
+
 
 namespace Corporate_app.Controllers
 {
     public class UsersController : Controller
     {
         private readonly ModelsContext _context;
-
-        public UsersController(ModelsContext context)
+        private readonly UsersRepository repository;
+        public UsersController(ModelsContext context, UsersRepository repository)
         {
             _context = context;
+            this.repository = repository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var modelsContext = _context.Users.Include(u => u.Position).Include(u => u.Role);
+            var modelsContext = repository.GetUsers();
             return View(await modelsContext.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
+            var user = await repository.GetUser(id);
+            if (user == null) {
+               
+                return RedirectToAction("Index","Users");
             }
-
-            var user = await _context.Users
-                .Include(u => u.Position)
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
             return View(user);
         }
 
@@ -53,12 +47,10 @@ namespace Corporate_app.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,Name,SurName,Email,Password,PositionId,RoleId,Phone,ConfirmationCode")] User user)
+        public IActionResult Create([Bind("UserId,Name,SurName,Email,Password,PositionId,RoleId,Phone,ConfirmationCode")] User user)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+            if (ModelState.IsValid) {
+                repository.SaveUser(user);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PositionId"] = new SelectList(_context.Positions, "PositionId", "PositionId", user.PositionId);
@@ -66,17 +58,13 @@ namespace Corporate_app.Controllers
             return View(user);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
+            var user = await repository.GetUser(id);
+            if (user == null) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
             ViewData["PositionId"] = new SelectList(_context.Positions, "PositionId", "PositionId", user.PositionId);
             ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", user.RoleId);
@@ -85,28 +73,23 @@ namespace Corporate_app.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Name,SurName,Email,Password,PositionId,RoleId,Phone,ConfirmationCode")] User user)
+        public IActionResult Edit(int id, [Bind("UserId,Name,SurName,Email,Password,PositionId,RoleId,Phone,ConfirmationCode")] User user)
         {
-            if (id != user.UserId)
-            {
-                return NotFound();
+            if (id != user.UserId) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+            if (ModelState.IsValid) {
+                try {
+                    repository.SaveUser(user);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.UserId))
-                    {
-                        return NotFound();
+                catch (DbUpdateConcurrencyException) {
+                    if (!UserExists(user.UserId)) {
+                        ModelState.AddModelError("", "Error! Not found this id!");
+                        return View();
                     }
-                    else
-                    {
+                    else {
                         throw;
                     }
                 }
@@ -117,20 +100,12 @@ namespace Corporate_app.Controllers
             return View(user);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.Users
-                .Include(u => u.Position)
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
-            {
-                return NotFound();
+            var user = await repository.GetUser(id);
+            if (user == null) {
+                ModelState.AddModelError("", "Error! Not found this id!");
+                return View();
             }
 
             return View(user);
@@ -140,9 +115,8 @@ namespace Corporate_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            var user = await repository.GetUser(id);
+            repository.DeleteUser(user);
             return RedirectToAction(nameof(Index));
         }
 

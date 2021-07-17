@@ -1,0 +1,27 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_ChatsLayout.cshtml";
+
+}
+<link rel="stylesheet" asp-append-version="true" href="~/css/ChatStyle.css" />
+
+<div id="user" data-user="@ViewBag.User"></div>
+
+<h1 id="dataName">@ViewBag.Chat</h1>
+
+<div id="chatScroll">
+    <div id="messageHistory"></div>
+    <div id="chatroom"></div>
+</div>
+<div id="inputForm">
+    <input type="text" id="message" />
+    <input type="button" id="sendBtn" class="btn btn-info" value="Отправить" />
+</div>
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/js/connectionToSignalR.js"></script>
+<script src="~/js/MessageScript.js"></script>
+<script src="~/js/AddMessage.js"></script>
+<script src="~/js/MessageHistory.js"></script>
+<script src="~/js/ViewMassage.js"></script>

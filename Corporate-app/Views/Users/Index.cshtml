@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Corporate_app.Models.User>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index"; Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <h1>Index</h1>
@@ -20,9 +20,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Position)
@@ -50,9 +47,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Position.PositionId)

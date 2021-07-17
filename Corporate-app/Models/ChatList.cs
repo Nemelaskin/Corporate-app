@@ -11,8 +11,7 @@ namespace Corporate_app.Models
         [Key]
         public int ChatListId { get; set; }
         public string Name{ get; set; }
-        //public int Id_User { get; set; } // пользователь, к которому прикреплен этот лист
-        public List<User> User = new List<User>();
+        public List<User> User { get; set; }
 
     }
 }

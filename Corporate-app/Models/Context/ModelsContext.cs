@@ -12,7 +12,6 @@ namespace Corporate_app.Models.Context
         public DbSet<Role> Roles { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<ChatList> ChatLists { get; set; }
-        public DbSet<User_ChatList> User_ChatLists { get; set; }
         public DbSet<MessageList> MessageLists { get; set; }
 
         public ModelsContext(DbContextOptions<ModelsContext> options)
@@ -22,9 +21,6 @@ namespace Corporate_app.Models.Context
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            modelBuilder.Entity<User_ChatList>().HasKey(x => new { x.UserId, x.ChatListId});
-
         }
     }
 }

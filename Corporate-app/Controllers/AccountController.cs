@@ -30,10 +30,13 @@ namespace Corporate_app.Controllers
         public async Task<IActionResult> Login(LoginModel model)
         {
             if (ModelState.IsValid) {
-                User user = await context.Users.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+                User user = await context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
                 if (user != null) {
-                    await Authenticate(model.Email);
-                    return RedirectToAction("Index", "Home");
+                    if (BCrypt.Net.BCrypt.Verify(model.Password, user.Password)){
+                        await Authenticate(user.UserId + " " + user.Name + " " + user.SurName);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    
                 }
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
@@ -51,11 +54,9 @@ namespace Corporate_app.Controllers
             if (ModelState.IsValid) {
                 User user = await context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
                 if (user == null) {
-                    // добавляем пользователя в бд
-                    context.Users.Add(new User { Email = model.Email, Password = model.Password,Name = model.Name, SurName = model.Surname, Phone = model.Phone, RoleId=1, PositionId= 1});
+                    string passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
+                    context.Users.Add(new User { Email = model.Email, Password = passwordHash, Name = model.Name, SurName = model.Surname, Phone = model.Phone, RoleId=1, PositionId= 1});
                     await context.SaveChangesAsync();
-
-                    await Authenticate(model.Email);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -66,14 +67,11 @@ namespace Corporate_app.Controllers
         }
         private async Task Authenticate(string userName)
         {
-            // создаем один claim
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
             };
-            // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-            // установка аутентификационных куки
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
         public async Task<IActionResult> Logout()
